@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { Mosaic } from '../types';
 import { api } from '../services/api';
-import { testApiConnection } from '../utils/apiTest';
 
 interface MosaicStore {
   mosaics: Mosaic[];
@@ -22,10 +21,6 @@ export const useMosaicStore = create<MosaicStore>((set, get) => ({
 
   fetchMosaics: async () => {
     set({ loading: true, error: null });
-    
-    // Testa conectividade da API primeiro
-    const apiTest = await testApiConnection();
-    
     try {
       const mosaics = await api.getMosaics();
       set({ mosaics, loading: false });

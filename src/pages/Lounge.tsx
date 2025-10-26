@@ -9,7 +9,6 @@ export const Lounge = () => {
   const { mosaics, selectedMosaics, loading, fetchMosaics, toggleMosaic, clearSelection, selectAll } = useMosaicStore();
   const { updateConfig } = usePlayerStore();
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     fetchMosaics();

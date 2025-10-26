@@ -5,7 +5,6 @@ import { usePlayerStore } from '../stores/usePlayerStore';
 import { useRemoteControl } from '../hooks/useRemoteControl';
 import { HLSPlayer } from '../components/HLSPlayer';
 import { api } from '../services/api';
-import { testStreamUrls } from '../utils/streamTest';
 
 export const Vision = () => {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ export const Vision = () => {
     config, 
     currentMosaicIndex, 
     isPlaying, 
-    setCurrentMosaic,
     togglePlayback,
     nextMosaic,
     prevMosaic,
@@ -23,7 +21,7 @@ export const Vision = () => {
 
   const [currentMosaic, setCurrentMosaicData] = useState<any>(null);
   const [timer, setTimer] = useState(config.rotationInterval);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   const selectedMosaics = mosaics.filter(m => config.lastSelectedMosaics.includes(m.id));
   const activeMosaic = selectedMosaics[currentMosaicIndex];
@@ -38,7 +36,6 @@ export const Vision = () => {
     };
   }, []);
 
-  // Carrega dados do mosaico
   useEffect(() => {
     if (activeMosaic) {
       api.getMosaic(activeMosaic.id).then(setCurrentMosaicData);
@@ -57,7 +54,7 @@ export const Vision = () => {
       return;
     }
 
-    timerRef.current = setInterval(() => {
+    timerRef.current = window.setInterval(() => {
       setTimer(prev => {
         if (prev <= 1) {
           nextMosaic();
@@ -195,19 +192,6 @@ export const Vision = () => {
         <div className={`w-full h-full grid gap-1 ${getGridClass(currentMosaic.type)}`}>
           {currentMosaic.streams.map((stream: any, index: number) => {
             const streamUrl = api.getStreamUrl(stream);
-            
-            if (index === 0) {
-              testStreamUrls(stream);
-            }
-            
-            console.log(`Stream ${index}:`, {
-              name: stream.name,
-              title: stream.title,
-              playback_token: stream.playback_token?.substring(0, 10) + '...',
-              streaming_endpoint: stream.streaming_endpoint,
-              constructed_url: streamUrl,
-              alive: stream.alive
-            });
             
             return (
               <div key={index} className="relative bg-gray-900">

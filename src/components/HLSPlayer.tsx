@@ -44,7 +44,7 @@ export const HLSPlayer = ({ src, className = '', muted = true }: HLSPlayerProps)
         video.play().catch(console.error);
       });
 
-      hls.on(Hls.Events.ERROR, (event, data) => {
+      hls.on(Hls.Events.ERROR, (_event, data) => {
         if (data.fatal) {
           console.error('HLS Fatal Error:', data);
           setError(true);
